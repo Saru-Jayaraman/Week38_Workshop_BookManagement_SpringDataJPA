@@ -119,5 +119,10 @@ public class MyCommandLineRunner implements CommandLineRunner {
         bookLoanRepository.updateByBookLoanId(bookLoan2.getId());
         System.out.println(bookLoan2);
         System.out.println();
+
+        System.out.println("-------------------------------RETURN BOOK BY APP USER-----------------------------");
+        bookLoan1.returnBook();
+        bookLoanRepository.save(bookLoan1);
+        System.out.println(bookLoan1);
     }
 }
