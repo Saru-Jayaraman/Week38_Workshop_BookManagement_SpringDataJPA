@@ -1,19 +1,17 @@
 package se.lexicon.week38_workshop_appuserdetails.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer bookId;
+    private Integer id;
 
     @Setter
     @Column(unique = true, nullable = false, updatable = false)

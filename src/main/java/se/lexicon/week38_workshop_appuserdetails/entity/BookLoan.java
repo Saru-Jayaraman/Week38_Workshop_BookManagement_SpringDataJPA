@@ -8,19 +8,19 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "borrower")
+@ToString
 @Entity
 public class BookLoan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer bookLoanId;
+    private Integer id;
 
     @Setter
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDate loanDate;
 
     @Setter
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDate dueDate;
 
     @Setter
@@ -29,12 +29,12 @@ public class BookLoan {
 
     @Setter
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @JoinColumn
     private AppUser borrower;
 
     @Setter
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bookId")
+    @JoinColumn
     private Book book;
 
     public BookLoan(Book book, AppUser appUser) {
