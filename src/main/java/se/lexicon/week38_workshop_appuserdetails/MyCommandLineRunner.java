@@ -64,6 +64,59 @@ public class MyCommandLineRunner implements CommandLineRunner {
         bookLoanRepository.save(bookLoan3);
         System.out.println();
 
+        System.out.println("-----------------------------------APP USER REPOSITORY----------------------------------");
+        System.out.println("------------------------------------FIND BY USERNAME------------------------------------");
+        Optional<AppUser> findByUserName = appUserRepository.getAppUserByUserName(appUser2.getUserName());
+        findByUserName.ifPresent(System.out::println);
+        System.out.println();
+
+        System.out.println("--------------------------------FIND BETWEEN 2 REG DATES--------------------------------");
+        LocalDate startRegDate = LocalDate.of(2024,1,1);
+        LocalDate endRegDate = LocalDate.of(2024,12,31);
+        List<AppUser> findBetweenTwoRegDatesList = appUserRepository.getAllByRegDateBetween(startRegDate, endRegDate);
+        findBetweenTwoRegDatesList.forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("-----------------------------------FIND BY DETAILS ID-----------------------------------");
+        Optional<AppUser> findByDetailsId = appUserRepository.getAppUserByDetails_Id(appUser2.getDetails().getId());
+        findByDetailsId.ifPresent(System.out::println);
+        System.out.println();
+
+        System.out.println("-------------------------------FIND BY DETAILS EMAIL ID---------------------------------");
+        Optional<AppUser> findByDetailsEmail = appUserRepository.findByDetailsEmailIgnoreCase(details1.getEmail());
+        findByDetailsEmail.ifPresent(System.out::println);
+        System.out.println();
+
+        System.out.println("------------------------------FIND BY USERNAME AND PASSWORD-----------------------------");
+        Optional<AppUser> findByUserPass = appUserRepository.getAppUserByUserNameAndPassword(appUser2.getUserName(), appUser2.getPassword());
+        findByUserPass.ifPresent(System.out::println);
+        System.out.println();
+
+        System.out.println("-----------------------------------DETAILS REPOSITORY-----------------------------------");
+        System.out.println("-------------------------------------FIND BY EMAIL--------------------------------------");
+        Optional<Details> findByEmail = detailsRepository.getDetailsByEmail(details2.getEmail());
+        findByEmail.ifPresent(System.out::println);
+        System.out.println();
+
+        System.out.println("---------------------------------FIND BY NAME CONTAINS----------------------------------");
+        String findByNameContains = "mil";
+        List<Details> findByNameContainsList = detailsRepository.getDetailsByNameContains(findByNameContains);
+        System.out.println(findByNameContainsList);
+        System.out.println();
+
+        System.out.println("----------------------------FIND BY NAME EQUALS IGNORE CASE-----------------------------");
+        String findByNameString = "emily justin";
+        Optional<Details> findByNameEqualsIgnoreCase = detailsRepository.getDetailsByNameEqualsIgnoreCase(findByNameString);
+        findByNameEqualsIgnoreCase.ifPresent(System.out::println);
+        System.out.println();
+
+        System.out.println("-------------------------------FIND BETWEEN 2 BIRTH DATES-------------------------------");
+        LocalDate startBirthDate = LocalDate.of(2000,1,1);
+        LocalDate endBirthDate = LocalDate.of(2001,12,31);
+        List<Details> findBetweenTwoBirthDatesList = detailsRepository.getAllByBirthDateBetween(startBirthDate, endBirthDate);
+        findBetweenTwoBirthDatesList.forEach(System.out::println);
+        System.out.println();
+
         System.out.println("-------------------------------------BOOK REPOSITORY------------------------------------");
         System.out.println("--------------------------- -----FIND BY ISBN IGNORE CASE-------------------------------");
         Optional<Book> findBookByIsbnOptional = bookRepository.findByIsbnIgnoreCase(book1.getIsbn());
@@ -122,5 +175,6 @@ public class MyCommandLineRunner implements CommandLineRunner {
         bookLoan1.returnBook();
         bookLoanRepository.save(bookLoan1);
         System.out.println(bookLoan1);
+        System.out.println();
     }
 }
