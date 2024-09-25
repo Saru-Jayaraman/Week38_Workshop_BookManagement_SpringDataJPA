@@ -2,9 +2,7 @@ package se.lexicon.week38_workshop_appuserdetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import se.lexicon.week38_workshop_appuserdetails.entity.AppUser;
 import se.lexicon.week38_workshop_appuserdetails.entity.Book;
 import se.lexicon.week38_workshop_appuserdetails.entity.BookLoan;
@@ -29,7 +27,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
     private BookLoanRepository bookLoanRepository;
 
     @Autowired
-    public MyCommandLineRunner(AppUserRepository appUserRepository, DetailsRepository detailsRepository, BookRepository bookRepository, BookLoanRepository bookLoanRepository, LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+    public MyCommandLineRunner(AppUserRepository appUserRepository, DetailsRepository detailsRepository, BookRepository bookRepository, BookLoanRepository bookLoanRepository) {
         this.appUserRepository = appUserRepository;
         this.detailsRepository = detailsRepository;
         this.bookRepository = bookRepository;
@@ -108,19 +106,19 @@ public class MyCommandLineRunner implements CommandLineRunner {
         findBookLoanByOverDue.forEach(System.out::println);
         System.out.println();
 
-        System.out.println("------------------------------FIND BOOK LOAN BETWEEN 2 DATES---------------------------");
+        System.out.println("------------------------------FIND BOOK LOAN BETWEEN 2 DATES----------------------------");
         LocalDate startDate = LocalDate.of(2024, 9, 24);
         LocalDate endDate = LocalDate.of(2024, 9, 26);
         List<BookLoan> findBookLoanBetweenTwoDate = bookLoanRepository.findByLoanDateBetween(startDate, endDate);
         findBookLoanBetweenTwoDate.forEach(System.out::println);
         System.out.println();
 
-        System.out.println("-------------------------------UPDATE BOOK LOAN BY LOAN ID-----------------------------");
+        System.out.println("-------------------------------UPDATE BOOK LOAN BY LOAN ID------------------------------");
         bookLoanRepository.updateByBookLoanId(bookLoan2.getId());
         System.out.println(bookLoan2);
         System.out.println();
 
-        System.out.println("-------------------------------RETURN BOOK BY APP USER-----------------------------");
+        System.out.println("----------------------------------RETURN BOOK BY APP USER-------------------------------");
         bookLoan1.returnBook();
         bookLoanRepository.save(bookLoan1);
         System.out.println(bookLoan1);
