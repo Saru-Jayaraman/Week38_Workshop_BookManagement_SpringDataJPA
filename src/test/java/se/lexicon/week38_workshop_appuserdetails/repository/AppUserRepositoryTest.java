@@ -3,6 +3,7 @@ package se.lexicon.week38_workshop_appuserdetails.repository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 import se.lexicon.week38_workshop_appuserdetails.entity.AppUser;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AppUserRepositoryTest {
 
     @Autowired
@@ -76,13 +78,12 @@ public class AppUserRepositoryTest {
         Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
         AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
         detailsRepository.save(details1);
-        appUserRepository.save(appUser1);
+        AppUser savedUser = appUserRepository.save(appUser1);
 
         List<AppUser> foundUser = appUserRepository.getAllByRegDateBetween(LocalDate.of(2024,1,1),
                 LocalDate.of(2024,12,31));
         Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(foundUser.toString(),
-                "[AppUser(id=1, userName=Emily Johnson, regDate=2024-09-09, details=Details(id=1, email=emilyjohnson@test.se, name=Emily Johnson, birthDate=2000-09-09))]");
+        Assertions.assertEquals(foundUser.get(0).toString(), savedUser.toString());
     }
 
     @Test

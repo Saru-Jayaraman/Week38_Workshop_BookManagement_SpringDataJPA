@@ -3,6 +3,7 @@ package se.lexicon.week38_workshop_appuserdetails.repository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 import se.lexicon.week38_workshop_appuserdetails.entity.Details;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class DetailsRepositoryTest {
     @Autowired
     DetailsRepository detailsRepository;
@@ -70,8 +72,7 @@ public class DetailsRepositoryTest {
 
         List<Details> detailsList = detailsRepository.getDetailsByNameContains("mil");
         Assertions.assertNotNull(detailsList);
-        Assertions.assertEquals(detailsList.toString(),"[Details(id=1, email=emilyjohnson@test.se, name=Emily Johnson, birthDate=2024-09-19)]");
-
+        Assertions.assertEquals(detailsList.get(0).toString(), savedDetails1.toString());
     }
 
     @Test
@@ -82,12 +83,11 @@ public class DetailsRepositoryTest {
         Assertions.assertNotNull(savedDetails1);
 
         Details details2 = new Details("markjustin@test.se", "Mark Justin", LocalDate.of(2001, 2, 2));
-        detailsRepository.save(details2);
+        Details savedDetails2 = detailsRepository.save(details2);
 
         List<Details> detailsList = detailsRepository.getAllByBirthDateBetween(LocalDate.of(2000,1,1),
                 LocalDate.of(2001,12,31));
         Assertions.assertNotNull(detailsList);
-        Assertions.assertEquals(detailsList.toString(),"[Details(id=2, email=markjustin@test.se, name=Mark Justin, birthDate=2001-02-02)]");
-
+        Assertions.assertEquals(detailsList.get(0).toString(), savedDetails2.toString());
     }
 }
