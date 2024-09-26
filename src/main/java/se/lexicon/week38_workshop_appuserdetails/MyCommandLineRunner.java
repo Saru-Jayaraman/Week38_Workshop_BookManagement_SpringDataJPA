@@ -168,7 +168,8 @@ public class MyCommandLineRunner implements CommandLineRunner {
 
         System.out.println("-------------------------------UPDATE BOOK LOAN BY LOAN ID------------------------------");
         bookLoanRepository.updateByBookLoanId(bookLoan2.getId());
-        System.out.println(bookLoan2);
+        Optional<BookLoan> updatedBookLoan = bookLoanRepository.findById(bookLoan2.getId());
+        System.out.println(updatedBookLoan);
         System.out.println();
 
         System.out.println("----------------------------------RETURN BOOK BY APP USER-------------------------------");
