@@ -119,9 +119,12 @@ public class BookLoanRepositoryTest {
 
         Book book1 = new Book("bookisbn1", "Book1", 20);
         BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        BookLoan savedBookLoan = bookLoanRepository.save(bookLoan1);
+        bookLoanRepository.save(bookLoan1);
 
         bookLoanRepository.updateByBookLoanId(bookLoan1.getId());
-        Assertions.assertTrue(savedBookLoan.isReturned());
+        Optional<BookLoan> updatedBookLoan = bookLoanRepository.findById(bookLoan1.getId());
+        Assertions.assertTrue(updatedBookLoan.isPresent());
+        Assertions.assertNotNull(updatedBookLoan.get());
+        Assertions.assertTrue(updatedBookLoan.get().isReturned());
     }
 }
