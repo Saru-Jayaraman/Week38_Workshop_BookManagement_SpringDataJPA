@@ -3,31 +3,52 @@ package se.lexicon.week38_workshop_appuserdetails.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "authors")
 @Entity
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
     @Column(unique = true, nullable = false, updatable = false)
-    private String isbn;
+    @Setter private String isbn;
 
-    @Setter
     @Column(nullable = false, updatable = false, length = 100)
-    private String title;
+    @Setter private String title;
 
-    @Setter
-    @Column(updatable = false, nullable = false)
-    private int maxLoanDays;
+    @Column(nullable = false)
+    @Setter private int maxLoanDays;
+
+    @Column(nullable = false)
+    @Setter private boolean available;
+
+    @ManyToMany(mappedBy = "writtenBooks")
+    @Setter private Set<Author> authors = new HashSet<>();
 
     public Book(String isbn, String title, int maxLoanDays) {
         this.isbn = isbn;
         this.title = title;
         this.maxLoanDays = maxLoanDays;
+        this.available = true;
+    }
+
+    public void addAuthor(Author author) {
+        authors.add(author);
+        Set<Book> bookSet = author.getWrittenBooks();
+        bookSet.add(this);
+        author.setWrittenBooks(bookSet);
+    }
+
+    public void removeAuthor(Author author) {
+        authors.remove(author);
+        Set<Book> bookSet = author.getWrittenBooks();
+        bookSet.remove(this);
+        author.setWrittenBooks(bookSet);
     }
 }
