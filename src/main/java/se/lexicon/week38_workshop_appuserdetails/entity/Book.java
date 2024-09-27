@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 @Getter
@@ -31,8 +32,8 @@ public class Book {
     @ManyToMany(mappedBy = "writtenBooks")
     @Setter private Set<Author> authors = new HashSet<>();
 
-    public Book(String isbn, String title, int maxLoanDays) {
-        this.isbn = isbn;
+    public Book(String title, int maxLoanDays) {
+        this.isbn = java.util.UUID.randomUUID().toString();
         this.title = title;
         this.maxLoanDays = maxLoanDays;
         this.available = true;

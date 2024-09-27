@@ -1,6 +1,7 @@
 package se.lexicon.week38_workshop_appuserdetails.repository;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,22 +20,23 @@ import java.util.Optional;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BookLoanRepositoryTest {
     @Autowired
-    DetailsRepository detailsRepository;
-
-    @Autowired
     BookLoanRepository bookLoanRepository;
+
+    BookLoan bookLoan1, savedBookLoan;
+
+    @BeforeEach
+    public void setUp() {
+        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
+        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
+
+        Book book1 = new Book("Book1", 20);
+        bookLoan1 = new BookLoan(book1, appUser1);
+        savedBookLoan = bookLoanRepository.save(bookLoan1);
+    }
 
     @Test
     @Transactional
     public void testFindByBorrower_Id() {
-        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
-        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
-        detailsRepository.save(details1);
-
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        BookLoan savedBookLoan = bookLoanRepository.save(bookLoan1);
-
         List<BookLoan> bookLoanList = bookLoanRepository.findByBorrower_Id(bookLoan1.getBorrower().getId());
         Assertions.assertNotNull(bookLoanList);
         Assertions.assertEquals(savedBookLoan.toString(), bookLoanList.get(0).toString());
@@ -43,14 +45,6 @@ public class BookLoanRepositoryTest {
     @Test
     @Transactional
     public void testFindByBook_Id() {
-        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
-        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
-        detailsRepository.save(details1);
-
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        BookLoan savedBookLoan = bookLoanRepository.save(bookLoan1);
-
         List<BookLoan> bookLoanList = bookLoanRepository.findByBook_Id(bookLoan1.getBook().getId());
         Assertions.assertNotNull(bookLoanList);
         Assertions.assertEquals(savedBookLoan.toString(), bookLoanList.get(0).toString());
@@ -59,14 +53,6 @@ public class BookLoanRepositoryTest {
     @Test
     @Transactional
     public void testFindByReturnedFalse() {
-        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
-        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
-        detailsRepository.save(details1);
-
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        BookLoan savedBookLoan = bookLoanRepository.save(bookLoan1);
-
         List<BookLoan> bookLoanList = bookLoanRepository.findByReturnedFalse();
         Assertions.assertNotNull(bookLoanList);
         Assertions.assertEquals(savedBookLoan.toString(), bookLoanList.get(0).toString());
@@ -75,16 +61,8 @@ public class BookLoanRepositoryTest {
     @Test
     @Transactional
     public void testFindByOverDueBookLoans() {
-        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
-        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
-        detailsRepository.save(details1);
-
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        BookLoan savedBookLoan = bookLoanRepository.save(bookLoan1);
-
-        bookLoan1.setLoanDate(LocalDate.of(2024, 9, 4));
-        bookLoan1.setDueDate(LocalDate.of(2024, 9, 24));
+        bookLoan1.setLoanDate(LocalDate.now().minusDays(20));
+        bookLoan1.setDueDate(LocalDate.now().minusDays(18));
         bookLoanRepository.save(bookLoan1);
 
         List<BookLoan> bookLoanList = bookLoanRepository.findByOverDueBookLoans();
@@ -95,16 +73,8 @@ public class BookLoanRepositoryTest {
     @Test
     @Transactional
     public void testFindByLoanDateBetween() {
-        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
-        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
-        detailsRepository.save(details1);
-
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        BookLoan savedBookLoan = bookLoanRepository.save(bookLoan1);
-
-        LocalDate startDate = LocalDate.of(2024, 9, 24);
-        LocalDate endDate = LocalDate.of(2024, 9, 26);
+        LocalDate startDate = LocalDate.now().minusDays(2);
+        LocalDate endDate = LocalDate.now().plusDays(2);
         List<BookLoan> bookLoanList = bookLoanRepository.findByLoanDateBetween(startDate, endDate);
         Assertions.assertNotNull(bookLoanList);
         Assertions.assertEquals(savedBookLoan.toString(), bookLoanList.get(0).toString());
@@ -113,14 +83,6 @@ public class BookLoanRepositoryTest {
     @Test
     @Transactional
     public void testUpdateByBookLoanId() {
-        Details details1 = new Details("emilyjohnson@test.se", "Emily Johnson", LocalDate.of(2000, 9, 9));
-        AppUser appUser1 = new AppUser(details1.getName(), "emily123", LocalDate.of(2024,9,9), details1);
-        detailsRepository.save(details1);
-
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        BookLoan bookLoan1 = new BookLoan(book1, appUser1);
-        bookLoanRepository.save(bookLoan1);
-
         bookLoanRepository.updateByBookLoanId(bookLoan1.getId());
         Optional<BookLoan> updatedBookLoan = bookLoanRepository.findById(bookLoan1.getId());
         Assertions.assertTrue(updatedBookLoan.isPresent());

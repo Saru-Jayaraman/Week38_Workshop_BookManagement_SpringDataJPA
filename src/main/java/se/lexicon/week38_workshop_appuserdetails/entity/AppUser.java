@@ -26,7 +26,7 @@ public class AppUser {
     @Column(nullable = false)
     @Setter private LocalDate regDate;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     @Setter private Details details;
 

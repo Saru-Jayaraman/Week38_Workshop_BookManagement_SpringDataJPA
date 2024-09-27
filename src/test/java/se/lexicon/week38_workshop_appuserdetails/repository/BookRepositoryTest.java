@@ -1,6 +1,7 @@
 package se.lexicon.week38_workshop_appuserdetails.repository;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,11 +18,17 @@ public class BookRepositoryTest {
     @Autowired
     BookRepository bookRepository;
 
+    Book savedBook;
+
+    @BeforeEach
+    public void setUp() {
+        Book book1 = new Book("Book1", 20);
+        savedBook = bookRepository.save(book1);
+    }
+
     @Test
     @Transactional
     public void testFindByIsbnIgnoreCase() {
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        Book savedBook = bookRepository.save(book1);
         Optional<Book> bookOptional = bookRepository.findByIsbnIgnoreCase(savedBook.getIsbn());
         Assertions.assertTrue(bookOptional.isPresent());
         Assertions.assertNotNull(bookOptional.get());
@@ -30,8 +37,6 @@ public class BookRepositoryTest {
     @Test
     @Transactional
     public void testFindByTitleContaining() {
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        Book savedBook = bookRepository.save(book1);
         List<Book> bookList = bookRepository.findByTitleContaining("Book");
         Assertions.assertNotNull(bookList);
         Assertions.assertEquals(bookList.get(0).toString(), savedBook.toString());
@@ -40,8 +45,6 @@ public class BookRepositoryTest {
     @Test
     @Transactional
     public void testFindByMaxLoanDaysLessThan() {
-        Book book1 = new Book("bookisbn1", "Book1", 20);
-        Book savedBook = bookRepository.save(book1);
         List<Book> bookList = bookRepository.findByMaxLoanDaysLessThan(30);
         Assertions.assertNotNull(bookList);
         Assertions.assertEquals(bookList.get(0).toString(), savedBook.toString());

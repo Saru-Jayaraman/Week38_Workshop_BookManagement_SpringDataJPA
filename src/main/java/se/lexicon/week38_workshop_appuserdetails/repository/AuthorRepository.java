@@ -26,9 +26,9 @@ public interface AuthorRepository extends CrudRepository<Author, Integer> {
 
 //    Update an author's name by their ID.
     @Transactional
-    @Modifying
-    @Query(value = "update author set first_name = :firstName, last_Name = :lastName where id in (select author_id from authors_books where book_id = :bookId)", nativeQuery = true)
-    int updateByBookId(String firstName, String lastName, Integer bookId);
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update Author a set a.firstName = :firstName, a.lastName = :lastName where a.id = :authorId")
+    int updateByAuthorId(String firstName, String lastName, Integer authorId);
 
 //    Delete an author by their ID.
     @Transactional
