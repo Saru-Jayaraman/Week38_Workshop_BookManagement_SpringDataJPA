@@ -13,15 +13,15 @@ import java.util.Optional;
 
 @Component
 public class MyCommandLineRunner implements CommandLineRunner {
-    private AppUserRepository appUserRepository;
+    private final AppUserRepository appUserRepository;
 
-    private DetailsRepository detailsRepository;
+    private final DetailsRepository detailsRepository;
 
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    private BookLoanRepository bookLoanRepository;
+    private final BookLoanRepository bookLoanRepository;
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
     @Autowired
     public MyCommandLineRunner(AppUserRepository appUserRepository, DetailsRepository detailsRepository, BookRepository bookRepository, BookLoanRepository bookLoanRepository, AuthorRepository authorRepository) {
@@ -192,7 +192,7 @@ public class MyCommandLineRunner implements CommandLineRunner {
 
 
         System.out.println("----------------------------------------LOAN BOOK--------------------------------------");
-        BookLoan bookLoan4 = new BookLoan(book1, appUser2); // prints: "Book is not available and Assigned to some other person... Please loan some other book.."
+        BookLoan bookLoan4 = new BookLoan(book1, appUser2); // prints: "Book is not available and Assigned to some other person... Please loan some other book."
 
         System.out.println("----------------------------------------RETURN BOOK-------------------------------------");
         bookLoan1.returnBook(); // Returns the book
