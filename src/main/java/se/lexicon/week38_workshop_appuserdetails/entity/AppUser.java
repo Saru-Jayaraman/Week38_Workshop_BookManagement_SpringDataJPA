@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "password")
+@ToString(exclude = {"password", "bookLoans"})
 @Entity
 public class AppUser {
     @Id
@@ -24,15 +26,34 @@ public class AppUser {
     @Column(nullable = false)
     @Setter private LocalDate regDate;
 
-    @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
-    private Details details;
+    @Setter private Details details;
+
+    @OneToMany(mappedBy = "borrower")
+    @Setter private Set<BookLoan> bookLoans = new HashSet<>();
+
+    public AppUser(String userName, String password, Details details) {
+        this.userName = userName;
+        this.password = password;
+        this.details = details;
+        this.regDate = LocalDate.now();
+    }
 
     public AppUser(String userName, String password, LocalDate regDate, Details details) {
         this.userName = userName;
         this.password = password;
         this.regDate = regDate;
         this.details = details;
+    }
+
+    public void addBookLoan(BookLoan bookLoan) {
+        bookLoans.add(bookLoan);
+        bookLoan.setBorrower(this);
+    }
+
+    public void removeBookLoan(BookLoan bookLoan) {
+        bookLoans.remove(bookLoan);
+        bookLoan.setBorrower(null);
     }
 }
