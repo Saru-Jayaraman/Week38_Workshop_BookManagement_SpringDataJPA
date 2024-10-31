@@ -1,5 +1,5 @@
-# SPRING BOOT | JPA | HIBERNATE
-## APPLICATION: BOOK MANAGEMENT
+# SPRING BOOT | SPRING DATA JPA | HIBERNATE ORM
+## BOOK MANAGEMENT APPLICATION
 ### Part 1 - Setup:
 * Initialize a new Spring Boot project with following required dependencies:
 * Spring Web
